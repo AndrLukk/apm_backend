@@ -1,7 +1,7 @@
 from django.db import models
 
 class Funcionario(models.Model):
-    rf = models.CharField(max_length=10, editable=False, unique=True, blank=False, null=False)
+    rf = models.CharField(max_length=10, unique=True, primary_key=True, blank=False, null=False)
     nome = models.CharField(max_length=255, blank=False, null=False)
     cpf = models.CharField(max_length=11, blank=False, null=False)
     email = models.CharField(max_length=255, blank=False, null=False)
@@ -10,14 +10,20 @@ class Funcionario(models.Model):
     class Meta:
         verbose_name_plural = "Funcionários"
 
+    def __str__(self):
+        return f"RF{self.rf} - {self.nome}"
+
 class Aluno(models.Model):
-    rm = models.CharField(max_length=5, editable=False, unique=True, blank=False, null=False)
+    rm = models.CharField(max_length=5, primary_key=True, unique=True, blank=False, null=False)
     turma = models.CharField(max_length=6, blank=False, null=False)
     data_nasc = models.DateField(max_length=10, blank=False, null=False)
     nome = models.CharField(max_length=255, blank=False, null=False)
     email = models.CharField(max_length=255, blank=False, null=False)
     senha = models.CharField(max_length=255, blank=False, null=False)
     cpf = models.CharField(max_length=11, blank=False, null=False)
+
+    def __str__(self):
+        return f"RM{self.rm} - {self.nome}"
 
 class Responsavel(models.Model):
     nome = models.CharField(max_length=255, blank=False, null=False)
@@ -28,6 +34,9 @@ class Responsavel(models.Model):
     class Meta:
         verbose_name_plural = "Responsáveis"
 
+    def __str__(self):
+        return self.nome
+
 class Doacao(models.Model):
     data_envio = models.DateField(max_length=10, blank=False, null=False)
     cpf_autor = models.CharField(max_length=11, blank=False, null=False)
@@ -36,12 +45,8 @@ class Doacao(models.Model):
     class Meta:
         verbose_name_plural = "Doações"
 
-class NotaFiscal(models.Model):
-    valor_gasto = models.DecimalField(decimal_places=2, max_digits=10, blank=False, null=False)
-    destino_valor = models.CharField(max_length=255, blank=False, null=False)
-    
-    class Meta:
-        verbose_name_plural = "Notas Fiscais"
+    def __str__(self):
+        return self.id
 
 class Projeto(models.Model):
     STATUS_CHOICE = {
@@ -49,9 +54,13 @@ class Projeto(models.Model):
         "EA" : "Em Andamento",
         "FI" : "Finalizado"
     }
+    titulo = models.CharField(max_length=255, blank=False, null=False)
     status = models.CharField(max_length=2, choices=STATUS_CHOICE, default="NI", blank=False, null=False)
     desc = models.CharField(max_length=255, blank=False, null=False)
     foto = models.ImageField(upload_to="images/", blank=True, null=True)
+
+    def __str__(self):
+        return f"{self.id} - {self.titulo}"
 
 class Sugestao(models.Model):
     foto = models.ImageField(upload_to="images/", blank=True, null=True)
@@ -61,3 +70,6 @@ class Sugestao(models.Model):
 
     class Meta:
         verbose_name_plural = "Sugestões"
+
+    def __str__(self):
+        return self.id
