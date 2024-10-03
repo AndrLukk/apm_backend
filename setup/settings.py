@@ -1,19 +1,18 @@
-from pathlib import Path
+from pathlib import Path, os
+from dotenv import load_dotenv
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
+load_dotenv()
+
+# Build paths inside the project like this: BASE_DIR / "subdir".
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
-
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-062iayl3%(1j+1(cdm*@yre#(7w09e^+58^o(1=#x(7o0844h('
+SECRET_KEY = str(os.getenv("SECRET_KEY"))
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+# SECURITY WARNING: don"t run with debug turned on in production!
+DEBUG = os.getenv("DEBUG", "False").lower() == "true"
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS").split(" ")
 
 
 # Application definition
@@ -62,13 +61,24 @@ WSGI_APPLICATION = 'setup.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
-
-DATABASES = {
+if DEBUG:
+    DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
     }
-}
+    }
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': os.getenv('DB_ENGINE', 'django.db.backends.postgresql'),
+            'NAME': os.getenv('DB_NAME', 'postgres'),
+            'USER': os.getenv('DB_USER', 'postgres'),
+            'PASSWORD': os.getenv('DB_PASSWORD', ''),
+            'HOST': os.getenv('DB_URL').replace('https://', ''),
+            'PORT': os.getenv('DB_PORT'),
+        }
+    }
 
 
 # Password validation
@@ -115,3 +125,18 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 ALLOWED_HOSTS=['*']
 
 CORS_ORIGIN_ALLOW_ALL = True
+
+CC_FS_BUCKET = os.getenv('CC_FS_BUCKET')
+BUCKET_NAME, BUCKET_HOST = CC_FS_BUCKET.split(':')
+
+# Aqui você pode definir o padrão de armazenamento, se necessário
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+
+# Configurações para conexão
+AWS_ACCESS_KEY_ID = os.getenv('STORAGE_USER', 'u577fd074cfc')  # Nome de usuário
+AWS_SECRET_ACCESS_KEY = os.getenv('STORAGE_PASSWORD', 'ul0zoVPujMPKRIR8')  # Senha
+AWS_STORAGE_BUCKET_NAME = BUCKET_NAME.strip('/')
+AWS_S3_ENDPOINT_URL = f'https://{BUCKET_HOST}'
+
+# URL base para acessar os arquivos de mídia
+MEDIA_URL = f"https://{BUCKET_HOST}/"
