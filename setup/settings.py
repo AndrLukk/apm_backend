@@ -115,7 +115,11 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = "static/"
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "setup/static_base")
+]
+STATIC_ROOT = os.path.join(BASE_DIR, "static")
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
@@ -133,8 +137,8 @@ BUCKET_NAME, BUCKET_HOST = CC_FS_BUCKET.split(':')
 DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 
 # Configurações para conexão
-AWS_ACCESS_KEY_ID = os.getenv('STORAGE_USER', 'u577fd074cfc')  # Nome de usuário
-AWS_SECRET_ACCESS_KEY = os.getenv('STORAGE_PASSWORD', 'ul0zoVPujMPKRIR8')  # Senha
+AWS_ACCESS_KEY_ID = os.getenv('STORAGE_USER')  # Nome de usuário
+AWS_SECRET_ACCESS_KEY = os.getenv('STORAGE_PASSWORD')  # Senha
 AWS_STORAGE_BUCKET_NAME = BUCKET_NAME.strip('/')
 AWS_S3_ENDPOINT_URL = f'https://{BUCKET_HOST}'
 
