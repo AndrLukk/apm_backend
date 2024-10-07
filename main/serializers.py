@@ -1,7 +1,6 @@
 from .models import *
 from django.contrib.auth.hashers import make_password
 from rest_framework import serializers
-from .utils import EnablePartialUpdateMixin
 
 class FuncionarioSerializer(serializers.ModelSerializer):
     rf = serializers.CharField(read_only=True)
@@ -10,44 +9,45 @@ class FuncionarioSerializer(serializers.ModelSerializer):
         model = Funcionario
         fields = "__all__"
 
-    def create(self, cleanedData):
-        cleanedData['senha'] = make_password(cleanedData['senha'])
-        return super().create(cleanedData)
+    def create(self, validated_data):
+        validated_data['senha'] = make_password(validated_data['senha'])
+        return super().create(validated_data)
 
-    def update(self, instance, cleanedData):
-        if 'senha' in cleanedData:
-            cleanedData['senha'] = make_password(cleanedData['senha'])
-        return super().update(instance, cleanedData)
+    def update(self, instance, validated_data):
+        if 'senha' in validated_data:
+            validated_data['senha'] = make_password(validated_data['senha'])
+        return super().update(instance, validated_data)
 
 class AlunoSerializer(serializers.ModelSerializer):
+    rm = serializers.CharField(read_only=False)
     senha = serializers.CharField(write_only=True)
 
     class Meta:
         model = Aluno
         fields = "__all__"
 
-    def create(self, cleanedData):
-        cleanedData['senha'] = make_password(cleanedData['senha'])
-        return super().create(cleanedData)
+    def create(self, validated_data):
+        validated_data['senha'] = make_password(validated_data['senha'])
+        return super().create(validated_data)
 
-    def update(self, instance, cleanedData):
-        if 'senha' in cleanedData:
-            cleanedData['senha'] = make_password(cleanedData['senha'])
-        return super().update(instance, cleanedData)
+    def update(self, instance, validated_data):
+        if 'senha' in validated_data:
+            validated_data['senha'] = make_password(validated_data['senha'])
+        return super().update(instance, validated_data)
 
 class ResponsavelSerializer(serializers.ModelSerializer):
     class Meta:
         model = Responsavel
         fields = "__all__"
 
-    def create(self, cleanedData):
-        cleanedData['senha'] = make_password(cleanedData['senha'])
-        return super().create(cleanedData)
+    def create(self, validated_data):
+        validated_data['senha'] = make_password(validated_data['senha'])
+        return super().create(validated_data)
 
-    def update(self, instance, cleanedData):
-        if 'senha' in cleanedData:
-            cleanedData['senha'] = make_password(cleanedData['senha'])
-        return super().update(instance, cleanedData)
+    def update(self, instance, validated_data):
+        if 'senha' in validated_data:
+            validated_data['senha'] = make_password(validated_data['senha'])
+        return super().update(instance, validated_data)
 
 class DoacaoSerializer(serializers.ModelSerializer):
     class Meta:
