@@ -6,10 +6,10 @@ from main.views import *
 router = routers.DefaultRouter()
 router.register("funcionarios", FuncionarioViewSet, basename="funcionarios")
 router.register("alunos", AlunoViewSet, basename="alunos")
-router.register("responsavel", ResponsavelViewSet, basename="responsavel")
-router.register("doacao", DoacaoViewSet, basename="doacao")
-router.register("projeto", ProjetoViewSet, basename="projeto")
-router.register("sugestao", SugestaoViewSet, basename="sugestao")
+router.register("responsaveis", ResponsavelViewSet, basename="responsaveis")
+router.register("doacoes", DoacaoViewSet, basename="doacoes")
+router.register("projetos", ProjetoViewSet, basename="projetos")
+router.register("sugestoes", SugestaoViewSet, basename="sugestoes")
 
 urlpatterns = [
     path('admin/', admin.site.urls),
