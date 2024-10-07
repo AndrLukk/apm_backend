@@ -3,7 +3,8 @@ from django.contrib.auth.hashers import make_password
 from rest_framework import serializers
 
 class FuncionarioSerializer(serializers.ModelSerializer):
-    rf = serializers.CharField(read_only=True)
+    rf = serializers.CharField(read_only=False)
+    senha = serializers.CharField(write_only=True)
 
     class Meta:
         model = Funcionario
@@ -36,6 +37,9 @@ class AlunoSerializer(serializers.ModelSerializer):
         return super().update(instance, validated_data)
 
 class ResponsavelSerializer(serializers.ModelSerializer):
+    id = serializers.CharField(read_only=False)
+    senha = serializers.CharField(write_only=True)
+
     class Meta:
         model = Responsavel
         fields = "__all__"
