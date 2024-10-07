@@ -5,22 +5,22 @@ class FuncionarioViewSet(viewsets.ModelViewSet):
     serializer_class = FuncionarioSerializer
     queryset = Funcionario.objects.all()
 
-class AlunoViewSet(viewsets.ModelViewSet):
+class AlunoViewSet(EnablePartialUpdateMixin, viewsets.ModelViewSet):
     serializer_class = AlunoSerializer
     queryset = Aluno.objects.all()
 
-class ResponsavelViewSet(viewsets.ModelViewSet):
+class ResponsavelViewSet(EnablePartialUpdateMixin, viewsets.ModelViewSet):
     serializer_class = ResponsavelSerializer
     queryset = Responsavel.objects.all()
 
-class DoacaoViewSet(viewsets.ModelViewSet):
+class DoacaoViewSet(EnablePartialUpdateMixin, viewsets.ModelViewSet):
     serializer_class = DoacaoSerializer
     queryset = Doacao.objects.all()
 
-class ProjetoViewSet(viewsets.ModelViewSet):
+class ProjetoViewSet(EnablePartialUpdateMixin, viewsets.ModelViewSet):
     serializer_class = ProjetoSerializer
     queryset = Projeto.objects.all()
 
-class SugestaoViewSet(viewsets.ModelViewSet):
+class SugestaoViewSet(EnablePartialUpdateMixin, viewsets.ModelViewSet):
     serializer_class = SugestaoSerializer
     queryset = Sugestao.objects.all()
