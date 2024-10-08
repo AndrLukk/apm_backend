@@ -37,7 +37,6 @@ class AlunoSerializer(serializers.ModelSerializer):
         return super().update(instance, validated_data)
 
 class ResponsavelSerializer(serializers.ModelSerializer):
-    id = serializers.CharField(read_only=False)
     senha = serializers.CharField(write_only=True)
 
     class Meta:
