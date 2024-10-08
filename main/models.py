@@ -26,6 +26,7 @@ class Aluno(models.Model):
         return f"RM{self.rm} - {self.nome}"
 
 class Responsavel(models.Model):
+    id = models.AutoField(auto_created=True, primary_key=True, unique=True, editable=False)
     nome = models.CharField(max_length=255, blank=False, null=False)
     email = models.CharField(max_length=255, blank=False, null=False)
     senha = models.CharField(max_length=255, blank=False, null=False)
