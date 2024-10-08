@@ -39,6 +39,7 @@ class Responsavel(models.Model):
         return self.nome
 
 class Doacao(models.Model):
+    id = models.AutoField(auto_created=True, primary_key=True, unique=True, editable=False)
     data_envio = models.DateField(max_length=10, blank=False, null=False)
     cpf_autor = models.CharField(max_length=11, blank=False, null=False)
     valor = models.DecimalField(decimal_places=2, max_digits=10, blank=False, null=False)
@@ -55,6 +56,7 @@ class Projeto(models.Model):
         "EA" : "Em Andamento",
         "FI" : "Finalizado"
     }
+    id = models.AutoField(auto_created=True, primary_key=True, unique=True, editable=False)
     titulo = models.CharField(max_length=255, blank=False, null=False)
     status = models.CharField(max_length=2, choices=STATUS_CHOICE, default="NI", blank=False, null=False)
     desc = models.CharField(max_length=255, blank=False, null=False)
@@ -64,6 +66,7 @@ class Projeto(models.Model):
         return f"{self.id} - {self.titulo}"
 
 class Sugestao(models.Model):
+    id = models.AutoField(auto_created=True, primary_key=True, unique=True, editable=False)
     foto = models.ImageField(upload_to="images/", blank=True, null=True)
     data_envio = models.DateField(max_length=10, blank=False, null=False)
     cpf_autor = models.CharField(max_length=11, blank=False, null=False)
