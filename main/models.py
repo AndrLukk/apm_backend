@@ -60,7 +60,7 @@ class Projeto(models.Model):
     titulo = models.CharField(max_length=255, blank=False, null=False)
     status = models.CharField(max_length=2, choices=STATUS_CHOICE, default="NI", blank=False, null=False)
     desc = models.CharField(max_length=255, blank=False, null=False)
-    foto = models.ImageField(upload_to="images/", blank=True, null=True)
+    foto = models.ImageField(upload_to="", blank=True, null=True)
 
     def __str__(self):
         return f"{self.id} - {self.titulo}"

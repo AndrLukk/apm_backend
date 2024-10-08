@@ -58,11 +58,15 @@ class DoacaoSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 class ProjetoSerializer(serializers.ModelSerializer):
+    foto = serializers.ImageField(required=False)
+
     class Meta:
         model = Projeto
         fields = "__all__"
 
 class SugestaoSerializer(serializers.ModelSerializer):
+    foto = serializers.ImageField(required=False)
+
     class Meta:
         model = Sugestao
         fields = "__all__"
