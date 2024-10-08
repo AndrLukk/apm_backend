@@ -1,5 +1,7 @@
 from rest_framework import viewsets
 from .serializers import *
+from rest_framework.parsers import MultiPartParser, FormParser
+
 
 class FuncionarioViewSet(viewsets.ModelViewSet):
     serializer_class = FuncionarioSerializer
@@ -18,9 +20,11 @@ class DoacaoViewSet(viewsets.ModelViewSet):
     queryset = Doacao.objects.all()
 
 class ProjetoViewSet(viewsets.ModelViewSet):
+    parser_classes = (MultiPartParser, FormParser)
     serializer_class = ProjetoSerializer
     queryset = Projeto.objects.all()
 
 class SugestaoViewSet(viewsets.ModelViewSet):
+    parser_classes = (MultiPartParser, FormParser)
     serializer_class = SugestaoSerializer
     queryset = Sugestao.objects.all()
