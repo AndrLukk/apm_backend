@@ -57,9 +57,23 @@ class DoacaoSerializer(serializers.ModelSerializer):
         model = Doacao
         fields = "__all__"
 
-class ProjetoSerializer(serializers.ModelSerializer):
-    foto = serializers.ImageField(required=False)
+class ProjetoVoluntarioSerializer(serializers.ModelSerializer):
+    voluntario_info = serializers.SerializerMethodField()
 
+    class Meta:
+        model = ProjetoVoluntario
+        fields = ['projeto', 'voluntario_info']
+
+    def get_voluntario_info(self, obj):
+        if obj.content_type.model == 'funcionario':
+            return FuncionarioSerializer(obj.voluntario).data
+        elif obj.content_type.model == 'aluno':
+            return AlunoSerializer(obj.voluntario).data
+        return None
+
+class ProjetoSerializer(serializers.ModelSerializer):
+    voluntarios = ProjetoVoluntarioSerializer(many=True, read_only=True)
+    
     class Meta:
         model = Projeto
         fields = "__all__"

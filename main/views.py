@@ -22,7 +22,7 @@ class DoacaoViewSet(viewsets.ModelViewSet):
 class ProjetoViewSet(viewsets.ModelViewSet):
     parser_classes = (MultiPartParser, FormParser)
     serializer_class = ProjetoSerializer
-    queryset = Projeto.objects.all()
+    queryset = Projeto.objects.prefetch_related('voluntarios').all()
 
 class SugestaoViewSet(viewsets.ModelViewSet):
     parser_classes = (MultiPartParser, FormParser)
