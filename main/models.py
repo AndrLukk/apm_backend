@@ -31,6 +31,7 @@ class Responsavel(models.Model):
     email = models.CharField(max_length=255, blank=False, null=False)
     senha = models.CharField(max_length=255, blank=False, null=False)
     cpf = models.CharField(max_length=11, blank=False, null=False)
+    rm_dependente = models.ForeignKey(Aluno, on_delete=models.CASCADE, related_name="responsaveis")
 
     class Meta:
         verbose_name_plural = "Responsáveis"
