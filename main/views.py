@@ -24,6 +24,11 @@ class ProjetoViewSet(viewsets.ModelViewSet):
     serializer_class = ProjetoSerializer
     queryset = Projeto.objects.prefetch_related('voluntarios').all()
 
+class ProjetoVoluntarioViewSet(viewsets.ModelViewSet):
+    parser_classes = (MultiPartParser, FormParser)
+    serializer_class = ProjetoSerializer
+    queryset = Projeto.objects.prefetch_related('voluntarios').all()
+
 class SugestaoViewSet(viewsets.ModelViewSet):
     parser_classes = (MultiPartParser, FormParser)
     serializer_class = SugestaoSerializer
