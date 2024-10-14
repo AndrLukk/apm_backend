@@ -76,6 +76,9 @@ class ProjetoVoluntario(models.Model):
 
     class Meta:
         unique_together = ('projeto', 'content_type', 'object_id')
+    
+    def __str__(self):
+        return f"{self.id} - {self.voluntario}"
 
 class Sugestao(models.Model):
     id = models.AutoField(auto_created=True, primary_key=True, unique=True, editable=False)

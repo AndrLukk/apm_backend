@@ -62,7 +62,7 @@ class ProjetoVoluntarioSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ProjetoVoluntario
-        fields = ['projeto', 'voluntario_info']
+        fields = ['id', 'projeto', 'voluntario_info']
 
     def get_voluntario_info(self, obj):
         if obj.content_type.model == 'funcionario':
