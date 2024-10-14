@@ -9,7 +9,7 @@ router.register("alunos", AlunoViewSet, basename="alunos")
 router.register("responsaveis", ResponsavelViewSet, basename="responsaveis")
 router.register("doacoes", DoacaoViewSet, basename="doacoes")
 router.register("projetos", ProjetoViewSet, basename="projetos")
-router.register("projetovoluntarios", ProjetoVoluntarioViewSet, basename="projetovoluntario")
+router.register("projetovoluntarios", ProjetoVoluntarioViewSet, basename="projetovoluntarios")
 router.register("sugestoes", SugestaoViewSet, basename="sugestoes")
 
 urlpatterns = [
