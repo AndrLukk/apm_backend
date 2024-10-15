@@ -1,4 +1,4 @@
-from rest_framework import viewsets
+from rest_framework import viewsets, response, status
 from .serializers import *
 from rest_framework.parsers import MultiPartParser, FormParser
 
@@ -28,6 +28,13 @@ class ProjetoVoluntarioViewSet(viewsets.ModelViewSet):
     parser_classes = (MultiPartParser, FormParser)
     serializer_class = ProjetoVoluntarioSerializer
     queryset = ProjetoVoluntario.objects.all()
+
+    def create(self, request, *args, **kwargs):
+        data = request.data.copy()
+        for voluntario in data.pop("voluntarios", None):
+            print(voluntario)
+        return response.Response("escreveu não leu pau comeu", status=status.HTTP_201_CREATED)
+
 
 class SugestaoViewSet(viewsets.ModelViewSet):
     parser_classes = (MultiPartParser, FormParser)
