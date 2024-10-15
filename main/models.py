@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes.fields import GenericForeignKey
+from django.contrib.auth.hashers import make_password
 
 class Funcionario(models.Model):
     rf = models.CharField(max_length=10, unique=True, primary_key=True, blank=False, null=False)
@@ -14,6 +15,12 @@ class Funcionario(models.Model):
 
     def __str__(self):
         return f"RF{self.rf} - {self.nome}"
+
+    def save(self, *args, **kwargs):
+        # Hash da senha antes de salvar
+        if self.senha:
+            self.senha = make_password(self.senha)
+        super().save(*args, **kwargs) 
 
 class Aluno(models.Model):
     rm = models.CharField(max_length=5, primary_key=True, unique=True, blank=False, null=False)

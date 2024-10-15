@@ -11,6 +11,7 @@ router.register("doacoes", DoacaoViewSet, basename="doacoes")
 router.register("projetos", ProjetoViewSet, basename="projetos")
 router.register("voluntarios", ProjetoVoluntarioViewSet, basename="voluntarios")
 router.register("sugestoes", SugestaoViewSet, basename="sugestoes")
+router.register("login", LoginViewSet, basename="login")
 
 urlpatterns = [
     path('admin/', admin.site.urls),
