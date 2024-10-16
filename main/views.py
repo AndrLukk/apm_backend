@@ -25,7 +25,7 @@ class ProjetoViewSet(viewsets.ModelViewSet):
     queryset = Projeto.objects.prefetch_related('voluntarios').all()
 
 class ProjetoVoluntarioViewSet(viewsets.ModelViewSet):
-    parser_classes = (MultiPartParser, FormParser, JSONParser)
+    parser_classes = (MultiPartParser, FormParser)
     serializer_class = ProjetoVoluntarioSerializer
     queryset = ProjetoVoluntario.objects.all()
 
@@ -42,9 +42,6 @@ class SugestaoViewSet(viewsets.ModelViewSet):
     parser_classes = (MultiPartParser, FormParser)
     serializer_class = SugestaoSerializer
     queryset = Sugestao.objects.all()
-
-
-from django.contrib.auth.hashers import make_password, check_password
 
 class LoginViewSet(viewsets.ViewSet):
     def create(self, request):
