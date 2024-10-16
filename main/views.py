@@ -25,17 +25,19 @@ class ProjetoViewSet(viewsets.ModelViewSet):
     queryset = Projeto.objects.prefetch_related('voluntarios').all()
 
 class ProjetoVoluntarioViewSet(viewsets.ModelViewSet):
-    parser_classes = (MultiPartParser, FormParser)
     serializer_class = ProjetoVoluntarioSerializer
     queryset = ProjetoVoluntario.objects.all()
 
     def create(self, request, *args, **kwargs):
-        
-        voluntarios = request.data.get("voluntarios", None)
+        voluntarios = request.data.getlist("voluntario")
+
+        if voluntarios is None:
+            return Response({"error": "Voluntarios não fornecidos"}, status=status.HTTP_400_BAD_REQUEST)
+
         for voluntario in voluntarios:
-            print(voluntario)
-        
-        return response.Response("escreveu não leu pau comeu", status=status.HTTP_201_CREATED)
+            print(voluntario)  # Aqui você pode processar os dados do voluntário
+
+        return Response({"message": "Voluntários processados com sucesso"}, status=status.HTTP_201_CREATED)
 
 
 class SugestaoViewSet(viewsets.ModelViewSet):
