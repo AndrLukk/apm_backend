@@ -38,7 +38,7 @@ class ProjetoVoluntarioViewSet(viewsets.ModelViewSet):
         try:
             for voluntario in voluntarios:
             # Aqui você deve processar o voluntário, por exemplo, validá-lo ou salvá-lo
-            print(voluntario)  # Verifique se você está recebendo os dados corretamente
+                print(voluntario)  # Verifique se você está recebendo os dados corretamente
 
             return Response({"message": "Voluntários processados com sucesso"}, status=status.HTTP_201_CREATED)
         except Exception as e:
