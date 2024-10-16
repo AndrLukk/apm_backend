@@ -27,23 +27,7 @@ class ProjetoViewSet(viewsets.ModelViewSet):
 class ProjetoVoluntarioViewSet(viewsets.ModelViewSet):
     serializer_class = ProjetoVoluntarioSerializer
     queryset = ProjetoVoluntario.objects.all()
-
-    def create(self, request, *args, **kwargs):
-        voluntarios = request.data.getlist("voluntario")
-
-        if not voluntarios:
-            return Response({"error": "Voluntários não fornecidos"}, status=status.HTTP_400_BAD_REQUEST)
-
-    # Processar voluntários
-        try:
-            for voluntario in voluntarios:
-            # Aqui você deve processar o voluntário, por exemplo, validá-lo ou salvá-lo
-                print(voluntario)  # Verifique se você está recebendo os dados corretamente
-
-            return Response({"message": "Voluntários processados com sucesso"}, status=status.HTTP_201_CREATED)
-        except Exception as e:
-            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
+    
 
 class SugestaoViewSet(viewsets.ModelViewSet):
     parser_classes = (MultiPartParser, FormParser)
