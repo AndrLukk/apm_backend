@@ -27,6 +27,17 @@ class ProjetoViewSet(viewsets.ModelViewSet):
 class ProjetoVoluntarioViewSet(viewsets.ModelViewSet):
     serializer_class = ProjetoVoluntarioSerializer
     queryset = ProjetoVoluntario.objects.all()
+
+    def create(self, request, *args, **kwargs):
+        voluntarios = request.data.getlist("voluntario")
+
+        for voluntario in voluntarios:
+            if voluntario.content_type == "aluno":
+                object_id = voluntario.rm
+                content_type = voluntario.content_type
+                projeto = request.data.get("projeto")
+                
+
     
 
 class SugestaoViewSet(viewsets.ModelViewSet):
