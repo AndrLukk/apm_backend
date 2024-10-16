@@ -2,6 +2,7 @@ from rest_framework import viewsets, response, status
 from .serializers import *
 from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
 from django.contrib.auth import authenticate
+import json
 
 class FuncionarioViewSet(viewsets.ModelViewSet):
     serializer_class = FuncionarioSerializer
@@ -30,12 +31,24 @@ class ProjetoVoluntarioViewSet(viewsets.ModelViewSet):
 
     def create(self, request, *args, **kwargs):
         voluntarios = request.data.getlist("voluntario")
+        projeto = request.data.get("projeto")
 
         for voluntario in voluntarios:
-            if voluntario.content_type == "aluno":
-                object_id = voluntario.rm
-                content_type = voluntario.content_type
-                projeto = request.data.get("projeto")
+            voluntario_dict = json.loads(voluntario)
+            rm = voluntario_dict["rm"]
+            content_type_str = voluntario_dict["content_type"]
+
+            projeto_voluntario = ProjetoVoluntario(
+                projeto=Projeto.objects.get(id=projeto),
+                content_type=ContentType.objects.get(model=content_type_str),
+                object_id=rm,
+            )
+            projeto_voluntario.save()
+        
+        return response
+
+
+            
                 
 
     
