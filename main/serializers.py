@@ -65,12 +65,20 @@ class ProjetoVoluntarioSerializer(serializers.ModelSerializer):
         fields = ['id', 'projeto', 'voluntario_info']
 
     def get_voluntario_info(self, obj):
-        if obj.content_type.model == 'funcionario':
-            return FuncionarioSerializer(obj.voluntario).data
+        if obj.content_type.model == 'responsavel':
+            return {
+                'ID voluntário': obj.voluntario.id,
+                'Nome': obj.voluntario.nome,
+                'Tipo': "Responsável"
+            }
         elif obj.content_type.model == 'aluno':
-            return AlunoSerializer(obj.voluntario).data
+            return {
+                'id_obj': obj.voluntario.rm,
+                'nome': obj.voluntario.nome,
+                'tipo': "Aluno"
+            }
+        
         return None
-
 class ProjetoSerializer(serializers.ModelSerializer):
     voluntarios = ProjetoVoluntarioSerializer(many=True, read_only=True)
     
@@ -81,6 +89,18 @@ class ProjetoSerializer(serializers.ModelSerializer):
 class SugestaoSerializer(serializers.ModelSerializer):
     foto = serializers.ImageField(required=False)
 
+    def create(self, validated_data):
+        content_type_str = validated_data.pop("content_type")
+        object_id = validated_data.pop("object_id")  # Remover o object_id para ser usado após
+
+        content_type = ContentType.objects.get(model=content_type_str).id
+
+        validated_data["content_type"] = content_type
+        validated_data["object_id"] = object_id
+        
+        # Criar e retornar a instância
+        return super().create(validated_data)
+
     class Meta:
-        model = Sugestao
-        fields = "__all__"
+        model = Sugestao  # Certifique-se de que o modelo Sugestao esteja corretamente definido aqui
+        fields = '__all__'  # Ou defina explicitamente os campos que deseja incluir

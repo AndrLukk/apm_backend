@@ -27,7 +27,13 @@ class ProjetoViewSet(viewsets.ModelViewSet):
 
 class ProjetoVoluntarioViewSet(viewsets.ModelViewSet):
     serializer_class = ProjetoVoluntarioSerializer
-    queryset = ProjetoVoluntario.objects.all()
+    
+    def get_queryset(self):
+        queryset = ProjetoVoluntario.objects.all()
+        projeto_id = self.request.query_params.get('project')  # Obtém o parâmetro 'project' da URL
+        if projeto_id:
+            queryset = queryset.filter(projeto_id=projeto_id)  # Filtra pelo 'projeto_id' se for fornecido
+        return queryset
 
     def create(self, request, *args, **kwargs):
         voluntarios = request.data.getlist("voluntario")
@@ -35,17 +41,23 @@ class ProjetoVoluntarioViewSet(viewsets.ModelViewSet):
 
         for voluntario in voluntarios:
             voluntario_dict = json.loads(voluntario)
-            rm = voluntario_dict["rm"]
             content_type_str = voluntario_dict["content_type"]
-
-            projeto_voluntario = ProjetoVoluntario(
-                projeto=Projeto.objects.get(id=projeto),
-                content_type=ContentType.objects.get(model=content_type_str),
-                object_id=rm,
-            )
+            if content_type_str == "aluno":
+                rm = voluntario_dict["id"]
+                projeto_voluntario = ProjetoVoluntario(
+                    projeto=Projeto.objects.get(id=projeto),
+                    content_type=ContentType.objects.get(model=content_type_str),
+                    object_id=rm
+                )
+            else:
+                id = int(voluntario_dict["id"])
+                projeto_voluntario = ProjetoVoluntario(
+                    projeto=Projeto.objects.get(id=projeto),
+                    content_type=ContentType.objects.get(model=content_type_str),
+                    object_id=id)
             projeto_voluntario.save()
         
-        return response
+        return response.Response("escreveu nãoleu pau comeu", status=status.HTTP_201_CREATED)
 
 
             

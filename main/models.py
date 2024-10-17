@@ -91,8 +91,11 @@ class Sugestao(models.Model):
     id = models.AutoField(auto_created=True, primary_key=True, unique=True, editable=False)
     foto = models.ImageField(upload_to="images/", blank=True, null=True)
     data_envio = models.DateField(max_length=10, blank=False, null=False)
-    cpf_autor = models.CharField(max_length=11, blank=False, null=False)
     conteudo = models.CharField(max_length=255, blank=False, null=False)
+
+    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
+    object_id = models.PositiveIntegerField()
+    autor = GenericForeignKey('content_type', 'object_id')
 
     class Meta:
         verbose_name_plural = "Sugestões"
