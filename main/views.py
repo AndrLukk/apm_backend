@@ -1,6 +1,7 @@
 from rest_framework import viewsets, response, status
 from .serializers import *
-from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
+from rest_framework.parsers import MultiPartParser, FormParser
+from django.contrib.auth.hashers import check_password
 from django.contrib.auth import authenticate
 import json
 
@@ -69,6 +70,25 @@ class SugestaoViewSet(viewsets.ModelViewSet):
     parser_classes = (MultiPartParser, FormParser)
     serializer_class = SugestaoSerializer
     queryset = Sugestao.objects.all()
+
+    def create(self, request, *args, **kwargs):
+        content_type = request.data.get("content_type")
+        foto = request.data.get("foto")
+        object_id = request.data.get("object_id")
+        conteudo = request.data.get("conteudo")
+        data_envio = request.data.get("data_envio")
+
+        sugestao = Sugestao(
+            foto = foto,
+            content_type = ContentType.objects.get(model=content_type),
+            object_id = object_id,
+            conteudo = conteudo,
+            data_envio = data_envio
+        )
+
+        sugestao.save()
+        
+        return response.Response(status=status.HTTP_201_CREATED)
 
 class LoginViewSet(viewsets.ViewSet):
     def create(self, request):

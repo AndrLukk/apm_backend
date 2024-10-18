@@ -87,13 +87,20 @@ class ProjetoSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 class SugestaoSerializer(serializers.ModelSerializer):
+    tipo_Autor = serializers.SerializerMethodField()
     foto = serializers.ImageField(required=False)
+
+    def get_tipo_Autor(self, obj):
+        if obj.content_type.model == 'responsavel':
+            return "Responsável"
+        elif obj.content_type.model == 'aluno':
+            return "Aluno"
 
     def create(self, validated_data):
         content_type_str = validated_data.pop("content_type")
         object_id = validated_data.pop("object_id")  # Remover o object_id para ser usado após
 
-        content_type = ContentType.objects.get(model=content_type_str).id
+        content_type=ContentType.objects.get(model=content_type_str)
 
         validated_data["content_type"] = content_type
         validated_data["object_id"] = object_id
@@ -103,4 +110,4 @@ class SugestaoSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Sugestao  # Certifique-se de que o modelo Sugestao esteja corretamente definido aqui
-        fields = '__all__'  # Ou defina explicitamente os campos que deseja incluir
+        fields = ["id", "conteudo", "data_envio", "foto", "tipo_Autor", "object_id",]  # Ou defina explicitamente os campos que deseja incluir

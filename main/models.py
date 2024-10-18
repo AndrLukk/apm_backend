@@ -101,4 +101,4 @@ class Sugestao(models.Model):
         verbose_name_plural = "Sugestões"
 
     def __str__(self):
-        return self.id
+        return str(self.id)
