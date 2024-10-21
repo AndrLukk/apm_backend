@@ -67,9 +67,9 @@ class ProjetoVoluntarioSerializer(serializers.ModelSerializer):
     def get_voluntario_info(self, obj):
         if obj.content_type.model == 'responsavel':
             return {
-                'ID voluntário': obj.voluntario.id,
-                'Nome': obj.voluntario.nome,
-                'Tipo': "Responsável"
+                'id_obj': obj.voluntario.id,
+                'nome': obj.voluntario.nome,
+                'tipo': "Responsável"
             }
         elif obj.content_type.model == 'aluno':
             return {
