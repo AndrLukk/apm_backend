@@ -15,7 +15,11 @@ class AlunoViewSet(viewsets.ModelViewSet):
 
 class ResponsavelViewSet(viewsets.ModelViewSet):
     serializer_class = ResponsavelSerializer
-    queryset = Responsavel.objects.all()
+    queryset = Responsavel.objects.prefetch_related('dependentes').all()
+
+class ResponsavelDependenteViewSet(viewsets.ModelViewSet):
+    serializer_class = ResponsavelDependente
+    queryset = ResponsavelDependente.objects.all()
 
 class DoacaoViewSet(viewsets.ModelViewSet):
     serializer_class = DoacaoSerializer
@@ -59,12 +63,6 @@ class ProjetoVoluntarioViewSet(viewsets.ModelViewSet):
             projeto_voluntario.save()
         
         return response.Response("escreveu nãoleu pau comeu", status=status.HTTP_201_CREATED)
-
-
-            
-                
-
-    
 
 class SugestaoViewSet(viewsets.ModelViewSet):
     parser_classes = (MultiPartParser, FormParser)

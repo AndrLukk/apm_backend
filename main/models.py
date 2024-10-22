@@ -47,6 +47,16 @@ class Responsavel(models.Model):
 
     def __str__(self):
         return self.nome
+    
+class ResponsavelDependente(models.Model):
+    responsavel = models.ForeignKey(Responsavel, related_name="dependentes", on_delete=models.CASCADE)
+    dependente = models.OneToOneField(Aluno, on_delete=models.CASCADE)
+
+    class Meta:
+        unique_together = ('responsavel', 'dependente')
+    
+    def __str__(self):
+        return f"{self.responsavel} - {self.dependente}"
 
 class Doacao(models.Model):
     id = models.AutoField(auto_created=True, primary_key=True, unique=True, editable=False)

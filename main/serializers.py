@@ -35,8 +35,23 @@ class AlunoSerializer(serializers.ModelSerializer):
         if 'senha' in validated_data:
             validated_data['senha'] = make_password(validated_data['senha'])
         return super().update(instance, validated_data)
+    
+class ResponsavelDependenteSerializer(serializers.ModelSerializer):
+    dependente_info = serializers.SerializerMethodField()
+
+    class Meta:
+        model = ResponsavelDependente
+        fields = "__all__"
+
+    def get_dependente_info(self, obj):
+        return {
+            'id_obj': obj.dependente.id,
+            'nome': obj.dependente.nome,
+        }
+
 
 class ResponsavelSerializer(serializers.ModelSerializer):
+    dependentes = ResponsavelDependenteSerializer(many=True, read_only=True)
     senha = serializers.CharField(write_only=True)
 
     class Meta:
@@ -51,6 +66,7 @@ class ResponsavelSerializer(serializers.ModelSerializer):
         if 'senha' in validated_data:
             validated_data['senha'] = make_password(validated_data['senha'])
         return super().update(instance, validated_data)
+    
 
 class DoacaoSerializer(serializers.ModelSerializer):
     class Meta:
