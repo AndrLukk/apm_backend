@@ -40,7 +40,6 @@ class Responsavel(models.Model):
     email = models.CharField(max_length=255, blank=False, null=False)
     senha = models.CharField(max_length=255, blank=False, null=False)
     cpf = models.CharField(max_length=11, blank=False, null=False)
-    rm_dependente = models.ForeignKey(Aluno, on_delete=models.CASCADE, related_name="Dependente", blank=False, null=False)
 
     class Meta:
         verbose_name_plural = "Responsáveis"
@@ -50,11 +49,11 @@ class Responsavel(models.Model):
     
 class ResponsavelDependente(models.Model):
     responsavel = models.ForeignKey(Responsavel, related_name="dependentes", on_delete=models.CASCADE)
-    dependente = models.OneToOneField(Aluno, on_delete=models.CASCADE)
+    dependente = models.ForeignKey(Aluno, related_name="dependentes_responsavel", on_delete=models.CASCADE)
 
     class Meta:
         unique_together = ('responsavel', 'dependente')
-    
+
     def __str__(self):
         return f"{self.responsavel} - {self.dependente}"
 
@@ -102,7 +101,6 @@ class Sugestao(models.Model):
     foto = models.ImageField(upload_to="images/", blank=True, null=True)
     data_envio = models.DateField(max_length=10, blank=False, null=False)
     conteudo = models.CharField(max_length=255, blank=False, null=False)
-
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
     object_id = models.PositiveIntegerField()
     autor = GenericForeignKey('content_type', 'object_id')

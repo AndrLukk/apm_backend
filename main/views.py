@@ -18,8 +18,29 @@ class ResponsavelViewSet(viewsets.ModelViewSet):
     queryset = Responsavel.objects.prefetch_related('dependentes').all()
 
 class ResponsavelDependenteViewSet(viewsets.ModelViewSet):
-    serializer_class = ResponsavelDependente
-    queryset = ResponsavelDependente.objects.all()
+    serializer_class = ResponsavelDependenteSerializer
+
+    def get_queryset(self):
+        queryset = ResponsavelDependente.objects.all()
+        responsavel_id = self.request.query_params.get('responsavel')
+        if responsavel_id:
+            queryset = queryset.filter(responsavel=responsavel_id)
+        return queryset
+    
+    def create(self, request):
+        dependentes = request.data.getlist("dependente")
+        responsavel = request.data.get("responsavel")
+
+        for dependente_id in dependentes:
+            new_dependente = ResponsavelDependente(
+                responsavel=Responsavel.objects.get(id=responsavel),
+                dependente=Aluno.objects.get(rm=dependente_id)
+            )
+            new_dependente.save()
+        
+        return response.Response("Dependentes salvos", status=status.HTTP_201_CREATED)
+                
+
 
 class DoacaoViewSet(viewsets.ModelViewSet):
     serializer_class = DoacaoSerializer
@@ -32,12 +53,12 @@ class ProjetoViewSet(viewsets.ModelViewSet):
 
 class ProjetoVoluntarioViewSet(viewsets.ModelViewSet):
     serializer_class = ProjetoVoluntarioSerializer
-    
+
     def get_queryset(self):
         queryset = ProjetoVoluntario.objects.all()
-        projeto_id = self.request.query_params.get('project')  # Obtém o parâmetro 'project' da URL
+        projeto_id = self.request.query_params.get('projeto')
         if projeto_id:
-            queryset = queryset.filter(projeto_id=projeto_id)  # Filtra pelo 'projeto_id' se for fornecido
+            queryset = queryset.filter(projeto_id=projeto_id)
         return queryset
 
     def create(self, request, *args, **kwargs):
@@ -62,7 +83,7 @@ class ProjetoVoluntarioViewSet(viewsets.ModelViewSet):
                     object_id=id)
             projeto_voluntario.save()
         
-        return response.Response("escreveu nãoleu pau comeu", status=status.HTTP_201_CREATED)
+        return response.Response("Voluntários salvos", status=status.HTTP_201_CREATED)
 
 class SugestaoViewSet(viewsets.ModelViewSet):
     parser_classes = (MultiPartParser, FormParser)

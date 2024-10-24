@@ -37,18 +37,10 @@ class AlunoSerializer(serializers.ModelSerializer):
         return super().update(instance, validated_data)
     
 class ResponsavelDependenteSerializer(serializers.ModelSerializer):
-    dependente_info = serializers.SerializerMethodField()
 
     class Meta:
         model = ResponsavelDependente
         fields = "__all__"
-
-    def get_dependente_info(self, obj):
-        return {
-            'id_obj': obj.dependente.id,
-            'nome': obj.dependente.nome,
-        }
-
 
 class ResponsavelSerializer(serializers.ModelSerializer):
     dependentes = ResponsavelDependenteSerializer(many=True, read_only=True)
@@ -114,16 +106,15 @@ class SugestaoSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         content_type_str = validated_data.pop("content_type")
-        object_id = validated_data.pop("object_id")  # Remover o object_id para ser usado após
+        object_id = validated_data.pop("object_id")
 
         content_type=ContentType.objects.get(model=content_type_str)
 
         validated_data["content_type"] = content_type
         validated_data["object_id"] = object_id
         
-        # Criar e retornar a instância
         return super().create(validated_data)
 
     class Meta:
-        model = Sugestao  # Certifique-se de que o modelo Sugestao esteja corretamente definido aqui
-        fields = ["id", "conteudo", "data_envio", "foto", "tipo_Autor", "object_id",]  # Ou defina explicitamente os campos que deseja incluir
+        model = Sugestao
+        fields = ["id", "conteudo", "data_envio", "foto", "tipo_Autor", "object_id",]
