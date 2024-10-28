@@ -31,6 +31,11 @@ class Aluno(models.Model):
     senha = models.CharField(max_length=255, blank=False, null=False)
     cpf = models.CharField(max_length=11, blank=False, null=False)
 
+    def delete(self, using=None, keep_parents=False):
+        Sugestao.objects.filter(content_type=ContentType.objects.get_for_model(Aluno), object_id=self.rm).delete()
+        ProjetoVoluntario.objects.filter(content_type=ContentType.objects.get_for_model(Aluno), object_id=self.rm).delete()
+        super().delete(using=using, keep_parents=keep_parents)
+
     def __str__(self):
         return f"RM{self.rm} - {self.nome}"
 
@@ -40,6 +45,11 @@ class Responsavel(models.Model):
     email = models.CharField(max_length=255, blank=False, null=False)
     senha = models.CharField(max_length=255, blank=False, null=False)
     cpf = models.CharField(max_length=11, blank=False, null=False)
+
+    def delete(self, using=None, keep_parents=False):
+        Sugestao.objects.filter(content_type=ContentType.objects.get_for_model(Responsavel), object_id=self.id).delete()
+        ProjetoVoluntario.objects.filter(content_type=ContentType.objects.get_for_model(Responsavel), object_id=self.id).delete()
+        super().delete(using=using, keep_parents=keep_parents)
 
     class Meta:
         verbose_name_plural = "Responsáveis"

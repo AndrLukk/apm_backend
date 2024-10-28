@@ -73,6 +73,9 @@ class ProjetoVoluntarioSerializer(serializers.ModelSerializer):
         fields = ['id', 'projeto', 'voluntario_info']
 
     def get_voluntario_info(self, obj):
+        if obj.voluntario is None:
+            return {'error': 'Voluntário não encontrado'}
+
         if obj.content_type.model == 'responsavel':
             return {
                 'id_obj': obj.voluntario.id,
@@ -86,7 +89,8 @@ class ProjetoVoluntarioSerializer(serializers.ModelSerializer):
                 'tipo': "Aluno"
             }
         
-        return None
+        return {'error': 'Tipo de voluntário não reconhecido'}
+    
 class ProjetoSerializer(serializers.ModelSerializer):
     voluntarios = ProjetoVoluntarioSerializer(many=True, read_only=True)
     
