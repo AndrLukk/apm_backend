@@ -1,8 +1,10 @@
 from rest_framework import viewsets, response, status
+
 from .serializers import *
 from rest_framework.parsers import MultiPartParser, FormParser
-from django.contrib.auth.hashers import check_password
-from django.contrib.auth import authenticate
+from rest_framework.response import Response
+
+from rest_framework.views import APIView
 import json
 
 class FuncionarioViewSet(viewsets.ModelViewSet):
@@ -109,15 +111,43 @@ class SugestaoViewSet(viewsets.ModelViewSet):
         
         return response.Response(status=status.HTTP_201_CREATED)
 
-class LoginViewSet(viewsets.ViewSet):
-    def create(self, request):
-        nome = request.data.get('nome')
+class FuncionarioTokenView(APIView):
+
+    def post(self, request, *args, **kwargs):
+        rf = request.data.get('rf')
         senha = request.data.get('senha')
+
         try:
-            funcionario = Funcionario.objects.get(nome=nome)
-            if check_password(senha, funcionario.senha):
-                return response.Response({"message": "Login bem-sucedido!"}, status=status.HTTP_200_OK)
+            funcionario = Funcionario.objects.get(rf=rf)
+            if funcionario.check_password(senha):  # Verifica a senha usando a função que implementamos
+                # Gera o token
+                token, created = FuncionarioToken.objects.get_or_create(funcionario=funcionario)
+                
+                return Response({
+                    'token': str(token.token),
+                    'message': 'Autenticação bem-sucedida'
+                }, status=status.HTTP_200_OK)
             else:
-                return response.Response({"error": "Credenciais inválidas!"}, status=status.HTTP_401_UNAUTHORIZED)
+                return Response({'error': 'Credenciais inválidas'}, status=status.HTTP_401_UNAUTHORIZED)
         except Funcionario.DoesNotExist:
-            return response.Response({"error": "Credenciais inválidas!"}, status=status.HTTP_401_UNAUTHORIZED)
+            return Response({'error': 'Funcionário não encontrado'}, status=status.HTTP_404_NOT_FOUND)
+
+class FuncionarioLogoutView(APIView):
+    def post(self, request):
+        token = request.headers.get('Authorization')
+        if token:
+            try:
+                if token.startswith("Bearer "):
+                    token = token[7:]
+                funcionario_token = FuncionarioToken.objects.get(token=token)
+                funcionario_token.delete()
+                return Response({'message': 'Logout bem-sucedido'}, status=status.HTTP_200_OK)
+            except FuncionarioToken.DoesNotExist:
+                return Response({'error': 'Token inválido'}, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            return Response({'error': 'Token não encontrado'}, status=status.HTTP_400_BAD_REQUEST)
+
+
+class SomeProtectedView(APIView):
+    def get(self, request):
+        return Response({'message': f'Olá, {request.funcionario.nome}!'})
