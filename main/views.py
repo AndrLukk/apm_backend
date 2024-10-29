@@ -148,6 +148,6 @@ class FuncionarioLogoutView(APIView):
             return Response({'error': 'Token não encontrado'}, status=status.HTTP_400_BAD_REQUEST)
 
 
-class SomeProtectedView(APIView):
+class verifyToken(APIView):
     def get(self, request):
-        return Response({'message': f'Olá, {request.funcionario.nome}!'})
+        return Response({},status=200)

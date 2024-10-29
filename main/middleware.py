@@ -1,5 +1,5 @@
 from django.http import JsonResponse
-from django.urls import resolve, Resolver404
+from django.urls import resolve, Resolver404, reverse
 from django.utils.deprecation import MiddlewareMixin
 from .models import FuncionarioToken
 
@@ -8,7 +8,7 @@ class FuncionarioTokenMiddleware(MiddlewareMixin):
 
     def process_request(self, request):
 
-        if request.path in self.exempt_urls:
+        if request.path in self.exempt_urls or request.path.startswith('/admin/'):
             return None
         
         try:
@@ -21,7 +21,6 @@ class FuncionarioTokenMiddleware(MiddlewareMixin):
             try:
                 if token.startswith("Bearer "):
                     token = token[7:]
-                # Verifica se o token é válido
                 funcionario_token = FuncionarioToken.objects.get(token=token)
                 if funcionario_token.is_valid():
                     request.funcionario = funcionario_token.funcionario

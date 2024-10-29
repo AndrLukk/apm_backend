@@ -17,6 +17,12 @@ class Funcionario(models.Model):
 
     def __str__(self):
         return f"RF{self.rf} - {self.nome}"
+
+    def check_password(self, raw_password):
+        """
+        Verifica se a senha em texto puro corresponde à senha hash armazenada.
+        """
+        return django_check_password(raw_password, self.senha)
     
     def save(self, *args, **kwargs):
         # Hash da senha antes de salvar
