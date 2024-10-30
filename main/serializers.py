@@ -122,25 +122,3 @@ class SugestaoSerializer(serializers.ModelSerializer):
     class Meta:
         model = Sugestao
         fields = ["id", "conteudo", "data_envio", "foto", "tipo_Autor", "object_id",]
-
-class FuncionarioTokenObtainSerializer(serializers.Serializer):
-    rf = serializers.CharField(max_length=10)
-    senha = serializers.CharField(write_only=True)
-
-    def validate(self, attrs):
-        rf = attrs.get('rf')
-        senha = attrs.get('senha')
-
-        if rf and senha:
-            try:
-                funcionario = Funcionario.objects.get(rf=rf)
-            except Funcionario.DoesNotExist:
-                raise serializers.ValidationError('Credenciais inválidas.')
-
-            if not funcionario.check_password(senha):
-                raise serializers.ValidationError('Credenciais inválidas.')
-
-            attrs['funcionario'] = funcionario
-            return attrs
-        else:
-            raise serializers.ValidationError('Ambos os campos são necessários.')
