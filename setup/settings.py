@@ -1,4 +1,5 @@
-from pathlib import Path, os
+from pathlib import Path
+import os
 from dotenv import load_dotenv
 from datetime import timedelta
 
@@ -11,7 +12,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = str(os.getenv("SECRET_KEY"))
 
 # SECURITY WARNING: don"t run with debug turned on in production!
-DEBUG = os.getenv("DEBUG", "False").lower() == "true"
+DEBUG = os.getenv("DEBUG_VARIABLE").lower() == "true"
 
 ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS").split(" ")
 
