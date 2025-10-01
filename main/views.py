@@ -36,10 +36,10 @@ class SugestaoViewSet(viewsets.ModelViewSet):
 
 class LoginViewSet(viewsets.ViewSet):
     def create(self, request):
-        nome = request.data.get('nome')
+        rf = request.data.get('rf')
         senha = request.data.get('senha')
         try:
-            funcionario = Funcionario.objects.get(nome=nome)
+            funcionario = Funcionario.objects.get(rf=rf)
             if check_password(senha, funcionario.senha):
                 return response.Response({"message": "Login bem-sucedido!"}, status=status.HTTP_200_OK)
             else:
