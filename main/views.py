@@ -119,8 +119,7 @@ class FuncionarioTokenView(APIView):
 
         try:
             funcionario = Funcionario.objects.get(rf=rf)
-            if funcionario.check_password(senha):  # Verifica a senha usando a função que implementamos
-                # Gera o token
+            if funcionario.check_password(senha):
                 token, created = FuncionarioToken.objects.get_or_create(funcionario=funcionario)
                 
                 return Response({
