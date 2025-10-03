@@ -4,7 +4,7 @@ from django.utils.deprecation import MiddlewareMixin
 from .models import FuncionarioToken
 
 class FuncionarioTokenMiddleware(MiddlewareMixin):
-    exempt_urls = ['/login-funcionario']
+    exempt_urls = ['/login-funcionario', '/login-responsavel']
 
     def process_request(self, request):
 
