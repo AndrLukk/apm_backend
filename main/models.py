@@ -59,6 +59,17 @@ class Aluno(models.Model):
     def __str__(self):
         return f"RM{self.rm} - {self.nome}"
 
+class AlunoToken(models.Model):
+    aluno = models.ForeignKey('Aluno', on_delete=models.CASCADE)
+    token = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def is_valid(self):
+        return timezone.now() < self.created_at + timezone.timedelta(hours=24)
+
+    def __str__(self):
+        return f"Token for {self.aluno.nome}"
+
 class Responsavel(models.Model):
     id = models.AutoField(auto_created=True, primary_key=True, unique=True, editable=False)
     nome = models.CharField(max_length=255, blank=False, null=False)
@@ -76,6 +87,17 @@ class Responsavel(models.Model):
 
     def __str__(self):
         return self.nome
+
+class ResponsavelToken(models.Model):
+    responsavel = models.ForeignKey('Responsavel', on_delete=models.CASCADE)
+    token = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def is_valid(self):
+        return timezone.now() < self.created_at + timezone.timedelta(hours=24)
+
+    def __str__(self):
+        return f"Token for {self.responsavel.nome}"
     
 class ResponsavelDependente(models.Model):
     responsavel = models.ForeignKey(Responsavel, related_name="dependentes", on_delete=models.CASCADE)

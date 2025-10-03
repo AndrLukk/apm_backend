@@ -19,6 +19,26 @@ class ResponsavelViewSet(viewsets.ModelViewSet):
     serializer_class = ResponsavelSerializer
     queryset = Responsavel.objects.prefetch_related('dependentes').all()
 
+class ResponsavelTokenView(APIView):
+
+    def post(self, request, *args, **kwargs):
+        id = request.data.get('id')
+        senha = request.data.get('senha')
+
+        try:
+            responsavel = Responsavel.objects.get(id=id)
+            if responsavel.check_password(senha):
+                token, created = ResponsavelToken.objects.get_or_create(responsavel=responsavel)
+                
+                return Response({
+                    'token': str(token.token),
+                    'message': 'Autenticação bem-sucedida'
+                }, status=status.HTTP_200_OK)
+            else:
+                return Response({'error': 'Credenciais inválidas'}, status=status.HTTP_401_UNAUTHORIZED)
+        except Responsavel.DoesNotExist:
+            return Response({'error': 'Responsável não encontrado'}, status=status.HTTP_404_NOT_FOUND)
+
 class ResponsavelDependenteViewSet(viewsets.ModelViewSet):
     serializer_class = ResponsavelDependenteSerializer
 
