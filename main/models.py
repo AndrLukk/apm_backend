@@ -65,7 +65,7 @@ class AlunoToken(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     def is_valid(self):
-        return timezone.now() < self.created_at + timezone.timedelta(hours=24)
+        return timezone.now() < self.created_at + timedelta(hours=24)
 
     def __str__(self):
         return f"Token for {self.aluno.nome}"
@@ -94,7 +94,7 @@ class ResponsavelToken(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     def is_valid(self):
-        return timezone.now() < self.created_at + timezone.timedelta(hours=24)
+        return timezone.now() < self.created_at + timedelta(hours=24)
 
     def __str__(self):
         return f"Token for {self.responsavel.nome}"
