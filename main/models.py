@@ -1,5 +1,6 @@
 from django.db import models
 import uuid
+from datetime import timedelta
 from django.utils import timezone
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes.fields import GenericForeignKey
@@ -36,8 +37,7 @@ class FuncionarioToken(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     def is_valid(self):
-        # Exemplo de expiração após 24 horas
-        return timezone.now() < self.created_at + timezone.timedelta(hours=24)
+        return timezone.now() < self.created_at + timedelta(hours=24)
 
     def __str__(self):
         return f"Token for {self.funcionario.nome}"
