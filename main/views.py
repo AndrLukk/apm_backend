@@ -22,11 +22,11 @@ class ResponsavelViewSet(viewsets.ModelViewSet):
 class ResponsavelTokenView(APIView):
 
     def post(self, request, *args, **kwargs):
-        id = request.data.get('id')
+        email = request.data.get('email')
         senha = request.data.get('senha')
 
         try:
-            responsavel = Responsavel.objects.get(id=id)
+            responsavel = Responsavel.objects.get(email=email)
             if responsavel.check_password(senha):
                 token, created = ResponsavelToken.objects.get_or_create(responsavel=responsavel)
                 
