@@ -19,6 +19,13 @@ class ResponsavelViewSet(viewsets.ModelViewSet):
     serializer_class = ResponsavelSerializer
     queryset = Responsavel.objects.prefetch_related('dependentes').all()
 
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        email = self.request.query_params.get('email')
+        if email:
+            queryset = queryset.filter(email=email)
+        return queryset
+
 class ResponsavelTokenView(APIView):
 
     def post(self, request, *args, **kwargs):
