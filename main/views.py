@@ -7,6 +7,8 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 import json
 
+from datetime import date
+
 class FuncionarioViewSet(viewsets.ModelViewSet):
     serializer_class = FuncionarioSerializer
     queryset = Funcionario.objects.all()
