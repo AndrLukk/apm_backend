@@ -49,6 +49,26 @@ class AlunoViewSet(viewsets.ModelViewSet):
         # Se não tiver RM, retorna lista normal
         return super().list(request, *args, **kwargs)
 
+class AlunoTokenView(APIView):
+
+    def post(self, request, *args, **kwargs):
+        rm = request.data.get('rm')
+        senha = request.data.get('senha')
+
+        try:
+            aluno = Aluno.objects.get(rm=rm)
+            if aluno.check_password(senha):
+                token, created = AlunoToken.objects.get_or_create(aluno=aluno)
+                
+                return Response({
+                    'token': str(token.token),
+                    'message': 'Autenticação bem-sucedida'
+                }, status=status.HTTP_200_OK)
+            else:
+                return Response({'error': 'Credenciais inválidas'}, status=status.HTTP_401_UNAUTHORIZED)
+        except Aluno.DoesNotExist:
+            return Response({'error': 'Aluno não encontrado'}, status=status.HTTP_404_NOT_FOUND)
+
 class ResponsavelViewSet(viewsets.ModelViewSet):
     serializer_class = ResponsavelSerializer
     queryset = Responsavel.objects.prefetch_related('dependentes').all()

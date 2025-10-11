@@ -1,11 +1,11 @@
 from django.http import JsonResponse
 from django.urls import resolve, Resolver404
 from django.utils.deprecation import MiddlewareMixin
-from .models import FuncionarioToken, ResponsavelToken
+from .models import FuncionarioToken, ResponsavelToken, AlunoToken
 
 class FuncionarioTokenMiddleware(MiddlewareMixin):
     # URLs de login isentas de autenticação
-    exempt_urls = ['/login-funcionario', '/login-responsavel']
+    exempt_urls = ['/login-funcionario', '/login-responsavel', '/login-aluno']
 
     def process_request(self, request):
         # Se a URL for uma das URLs de login, não realiza autenticação
@@ -40,7 +40,15 @@ class FuncionarioTokenMiddleware(MiddlewareMixin):
                     else:
                         return JsonResponse({'error': 'Token expirado'}, status=401)
 
-            except (FuncionarioToken.DoesNotExist, ResponsavelToken.DoesNotExist):
+                # Verifica se o token é de Aluno
+                elif request.path == '/login-aluno':
+                    aluno_token = AlunoToken.objects.get(token=token)
+                    if aluno_token.is_valid():
+                        request.aluno = aluno_token.aluno
+                    else:
+                        return JsonResponse({'error': 'Token expirado'}, status=401)
+
+            except (FuncionarioToken.DoesNotExist, ResponsavelToken.DoesNotExist, AlunoToken.DoesNotExist):
                 return JsonResponse({'error': 'Token inválido'}, status=401)
         else:
             return JsonResponse({'error': 'Autorização necessária'}, status=401)
