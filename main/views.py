@@ -15,6 +15,13 @@ class AlunoViewSet(viewsets.ModelViewSet):
     serializer_class = AlunoSerializer
     queryset = Aluno.objects.all()
 
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        rm = self.request.query_params.get('rm')
+        if rm:
+            queryset = queryset.filter(rm=rm)
+        return queryset
+
 class ResponsavelViewSet(viewsets.ModelViewSet):
     serializer_class = ResponsavelSerializer
     queryset = Responsavel.objects.prefetch_related('dependentes').all()
