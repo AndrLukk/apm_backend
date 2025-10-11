@@ -36,8 +36,8 @@ class AlunoViewSet(viewsets.ModelViewSet):
                 # Cálculo da idade (assumindo campo data_nascimento)
                 hoje = date.today()
                 idade = (
-                    hoje.year - aluno.data_nascimento.year
-                    - ((hoje.month, hoje.day) < (aluno.data_nascimento.month, aluno.data_nascimento.day))
+                    hoje.year - aluno.data_nasc.year
+                    - ((hoje.month, hoje.day) < (aluno.data_nasc.month, aluno.data_nasc.day))
                 )
 
                 return Response({
