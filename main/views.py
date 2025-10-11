@@ -22,6 +22,33 @@ class AlunoViewSet(viewsets.ModelViewSet):
             queryset = queryset.filter(rm=rm)
         return queryset
 
+    def list(self, request, *args, **kwargs):
+        rm = request.query_params.get('rm')
+
+        # Se tiver RM, faz a verificação de idade
+        if rm:
+            try:
+                aluno = Aluno.objects.get(rm=rm)
+                serializer = self.get_serializer(aluno)
+
+                # Cálculo da idade (assumindo campo data_nascimento)
+                hoje = date.today()
+                idade = (
+                    hoje.year - aluno.data_nascimento.year
+                    - ((hoje.month, hoje.day) < (aluno.data_nascimento.month, aluno.data_nascimento.day))
+                )
+
+                return Response({
+                    "aluno": serializer.data,
+                    "maior_de_idade": idade >= 18
+                })
+
+            except Aluno.DoesNotExist:
+                return Response({"erro": "Aluno não encontrado."}, status=404)
+
+        # Se não tiver RM, retorna lista normal
+        return super().list(request, *args, **kwargs)
+
 class ResponsavelViewSet(viewsets.ModelViewSet):
     serializer_class = ResponsavelSerializer
     queryset = Responsavel.objects.prefetch_related('dependentes').all()
