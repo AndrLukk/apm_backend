@@ -51,6 +51,12 @@ class Aluno(models.Model):
     senha = models.CharField(max_length=255, blank=False, null=False)
     cpf = models.CharField(max_length=11, blank=False, null=False)
 
+    def check_password(self, raw_password):
+        """
+        Verifica se a senha em texto puro corresponde à senha hash armazenada.
+        """
+        return django_check_password(raw_password, self.senha)
+
     def delete(self, using=None, keep_parents=False):
         Sugestao.objects.filter(content_type=ContentType.objects.get_for_model(Aluno), object_id=self.rm).delete()
         ProjetoVoluntario.objects.filter(content_type=ContentType.objects.get_for_model(Aluno), object_id=self.rm).delete()
@@ -65,7 +71,7 @@ class AlunoToken(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     def is_valid(self):
-        return timezone.now() < self.created_at + timezone.timedelta(hours=24)
+        return timezone.now() < self.created_at + timedelta(hours=24)
 
     def __str__(self):
         return f"Token for {self.aluno.nome}"
@@ -76,6 +82,12 @@ class Responsavel(models.Model):
     email = models.CharField(max_length=255, blank=False, null=False)
     senha = models.CharField(max_length=255, blank=False, null=False)
     cpf = models.CharField(max_length=11, blank=False, null=False)
+
+    def check_password(self, raw_password):
+        """
+        Verifica se a senha em texto puro corresponde à senha hash armazenada.
+        """
+        return django_check_password(raw_password, self.senha)
 
     def delete(self, using=None, keep_parents=False):
         Sugestao.objects.filter(content_type=ContentType.objects.get_for_model(Responsavel), object_id=self.id).delete()
@@ -94,7 +106,7 @@ class ResponsavelToken(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     def is_valid(self):
-        return timezone.now() < self.created_at + timezone.timedelta(hours=24)
+        return timezone.now() < self.created_at + timedelta(hours=24)
 
     def __str__(self):
         return f"Token for {self.responsavel.nome}"

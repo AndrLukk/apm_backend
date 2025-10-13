@@ -7,6 +7,8 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 import json
 
+from datetime import date
+
 class FuncionarioViewSet(viewsets.ModelViewSet):
     serializer_class = FuncionarioSerializer
     queryset = Funcionario.objects.all()
@@ -15,18 +17,79 @@ class AlunoViewSet(viewsets.ModelViewSet):
     serializer_class = AlunoSerializer
     queryset = Aluno.objects.all()
 
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        rm = self.request.query_params.get('rm')
+        if rm:
+            queryset = queryset.filter(rm=rm)
+        return queryset
+
+    def list(self, request, *args, **kwargs):
+        rm = request.query_params.get('rm')
+
+        # Se tiver RM, faz a verificação de idade
+        if rm:
+            try:
+                aluno = Aluno.objects.get(rm=rm)
+                serializer = self.get_serializer(aluno)
+
+                # Cálculo da idade (assumindo campo data_nascimento)
+                hoje = date.today()
+                idade = (
+                    hoje.year - aluno.data_nasc.year
+                    - ((hoje.month, hoje.day) < (aluno.data_nasc.month, aluno.data_nasc.day))
+                )
+
+                return Response({
+                    "aluno": serializer.data,
+                    "maior_de_idade": idade >= 18
+                })
+
+            except Aluno.DoesNotExist:
+                return Response({"erro": "Aluno não encontrado."}, status=404)
+
+        # Se não tiver RM, retorna lista normal
+        return super().list(request, *args, **kwargs)
+
+class AlunoTokenView(APIView):
+
+    def post(self, request, *args, **kwargs):
+        rm = request.data.get('rm')
+        senha = request.data.get('senha')
+
+        try:
+            aluno = Aluno.objects.get(rm=rm)
+            if aluno.check_password(senha):
+                token, created = AlunoToken.objects.get_or_create(aluno=aluno)
+                
+                return Response({
+                    'token': str(token.token),
+                    'message': 'Autenticação bem-sucedida'
+                }, status=status.HTTP_200_OK)
+            else:
+                return Response({'error': 'Credenciais inválidas'}, status=status.HTTP_401_UNAUTHORIZED)
+        except Aluno.DoesNotExist:
+            return Response({'error': 'Aluno não encontrado'}, status=status.HTTP_404_NOT_FOUND)
+
 class ResponsavelViewSet(viewsets.ModelViewSet):
     serializer_class = ResponsavelSerializer
     queryset = Responsavel.objects.prefetch_related('dependentes').all()
 
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        email = self.request.query_params.get('email')
+        if email:
+            queryset = queryset.filter(email=email)
+        return queryset
+
 class ResponsavelTokenView(APIView):
 
     def post(self, request, *args, **kwargs):
-        id = request.data.get('id')
+        email = request.data.get('email')
         senha = request.data.get('senha')
 
         try:
-            responsavel = Responsavel.objects.get(id=id)
+            responsavel = Responsavel.objects.get(email=email)
             if responsavel.check_password(senha):
                 token, created = ResponsavelToken.objects.get_or_create(responsavel=responsavel)
                 

@@ -19,6 +19,7 @@ urlpatterns = [
     path("api/", include(router.urls)),
     path('login-funcionario', FuncionarioTokenView.as_view(), name='custom_token_obtain_pair'),
     path('login-responsavel', ResponsavelTokenView.as_view(), name='custom_token_obtain_pair'),
+    path('login-aluno', AlunoTokenView.as_view(), name='custom_token_obtain_pair'),
     path('logout/', FuncionarioLogoutView.as_view(), name ='token_delet'),
     path('verify/', verifyToken.as_view(), name='verify')
 ]
