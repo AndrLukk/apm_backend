@@ -180,7 +180,7 @@ class SugestaoViewSet(viewsets.ModelViewSet):
         foto = request.data.get("foto")
         object_id = request.data.get("object_id")
         conteudo = request.data.get("conteudo")
-        data_envio = request.data.get("data_envio")
+        data_envio = date.today()
 
         sugestao = Sugestao(
             foto = foto,
