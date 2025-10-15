@@ -1,7 +1,7 @@
 from rest_framework import viewsets, response, status
 
 from .serializers import *
-from rest_framework.parsers import MultiPartParser, FormParser
+from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
 from rest_framework.response import Response
 
 from rest_framework.views import APIView
@@ -171,7 +171,7 @@ class ProjetoVoluntarioViewSet(viewsets.ModelViewSet):
         return response.Response("Voluntários salvos", status=status.HTTP_201_CREATED)
 
 class SugestaoViewSet(viewsets.ModelViewSet):
-    parser_classes = (MultiPartParser, FormParser)
+    parser_classes = (MultiPartParser, FormParser, JSONParser)
     serializer_class = SugestaoSerializer
     queryset = Sugestao.objects.all()
 
