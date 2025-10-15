@@ -175,6 +175,20 @@ class SugestaoViewSet(viewsets.ModelViewSet):
     serializer_class = SugestaoSerializer
     queryset = Sugestao.objects.all()
 
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        content_type = self.request.query_params.get("content_type")
+        object_id = self.request.query_params.get("object_id")
+
+        if content_type and object_id:
+            try:
+                ct = ContentType.objects.get(model=content_type)
+                queryset = queryset.filter(content_type=ct, object_id=object_id)
+            except ContentType.DoesNotExist:
+                queryset = queryset.none()  # caso o tipo seja inválido
+
+        return queryset
+
     def create(self, request, *args, **kwargs):
         content_type = request.data.get("content_type")
         foto = request.data.get("foto")
