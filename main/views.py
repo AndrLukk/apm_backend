@@ -131,6 +131,22 @@ class DoacaoViewSet(viewsets.ModelViewSet):
     serializer_class = DoacaoSerializer
     queryset = Doacao.objects.all()
 
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        cpf = self.request.query_params.get('cpf')
+        
+        if cpf:
+            alunos_com_cpf = Aluno.objects.filter(cpf=cpf)
+            responsaveis_com_cpf = Responsavel.objects.filter(cpf=cpf)
+
+            doacoes_de_alunos = Doacao.objects.filter(aluno__in=alunos_com_cpf)
+
+            doacoes_de_responsaveis = Doacao.objects.filter(responsavel__in=responsaveis_com_cpf)
+
+            queryset = doacoes_de_alunos | doacoes_de_responsaveis
+
+        return queryset
+
 class ProjetoViewSet(viewsets.ModelViewSet):
     parser_classes = (MultiPartParser, FormParser)
     serializer_class = ProjetoSerializer
@@ -179,13 +195,13 @@ class SugestaoViewSet(viewsets.ModelViewSet):
         queryset = super().get_queryset()
         content_type = self.request.query_params.get("content_type")
         object_id = self.request.query_params.get("object_id")
-
+ 
         if content_type and object_id:
             try:
                 ct = ContentType.objects.get(model=content_type)
                 queryset = queryset.filter(content_type=ct, object_id=object_id)
             except ContentType.DoesNotExist:
-                queryset = queryset.none()  # caso o tipo seja inválido
+                queryset = queryset.none()
 
         return queryset
 
