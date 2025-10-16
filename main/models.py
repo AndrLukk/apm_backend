@@ -123,7 +123,7 @@ class ResponsavelDependente(models.Model):
 
 class Doacao(models.Model):
     id = models.AutoField(auto_created=True, primary_key=True, unique=True, editable=False)
-    data_envio = models.DateField(max_length=10, blank=False, null=False)
+    data_envio = models.DateField(auto_now_add=True)
     cpf_autor = models.CharField(max_length=11, blank=False, null=False)
     valor = models.DecimalField(decimal_places=2, max_digits=10, blank=False, null=False)
 
