@@ -136,8 +136,8 @@ class DoacaoViewSet(viewsets.ModelViewSet):
         cpf = self.request.query_params.get('cpf')
         
         if cpf:
-            alunos_com_cpf = Aluno.objects.filter(cpf=cpf)
-            responsaveis_com_cpf = Responsavel.objects.filter(cpf=cpf)
+            alunos_com_cpf = Aluno.objects.filter(cpf_autor=cpf)
+            responsaveis_com_cpf = Responsavel.objects.filter(cpf_autor=cpf)
 
             doacoes_de_alunos = Doacao.objects.filter(aluno__in=alunos_com_cpf)
 
