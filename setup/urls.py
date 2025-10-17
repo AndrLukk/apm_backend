@@ -21,6 +21,6 @@ urlpatterns = [
     path('login-responsavel', ResponsavelTokenView.as_view(), name='custom_token_obtain_pair'),
     path('login-aluno', AlunoTokenView.as_view(), name='custom_token_obtain_pair'),
     path('logout/', FuncionarioLogoutView.as_view(), name ='token_delet'),
-    path('verify/', verifyToken.as_view(), name='verify')
+    path('verify/', verifyToken.as_view(), name='verify'),
     path('api/soma-doacoes/', SomaDoacoesAPIView.as_view(), name='soma-doacoes'),
 ]
