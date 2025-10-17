@@ -147,6 +147,16 @@ class DoacaoViewSet(viewsets.ModelViewSet):
 
         return queryset
 
+class SomaDoacoesAPIView(APIView):
+
+    def get(self, request, *args, **kwargs):
+        total_doacoes = Doacao.objects.aggregate(total=models.Sum('valor'))['total']
+        
+        if total_doacoes is None:
+            total_doacoes = 0.0
+        
+        return Response({"total_doacoes": total_doacoes}, status=status.HTTP_200_OK)
+
 class ProjetoViewSet(viewsets.ModelViewSet):
     parser_classes = (MultiPartParser, FormParser)
     serializer_class = ProjetoSerializer
